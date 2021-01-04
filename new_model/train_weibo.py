@@ -123,7 +123,7 @@ def main():
 
     os.environ['MASTER_ADDR'] = '127.0.0.1'
     os.environ['MASTER_PORT'] = '6666'
-    os.environ['CUDA_VISIBLE_DEVICES'] = '0,1,2,3,4,5'
+    os.environ['CUDA_VISIBLE_DEVICES'] = '0,1,2,5,6,7'
     args.world_size = args.gpus * args.nodes
 
     if (
