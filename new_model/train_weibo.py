@@ -34,8 +34,7 @@ class tokendataset(Dataset):
         return self.file_raws
 
     def __getitem__(self, idx):
-        data = self.dataset[idx]
-        data = json.loads(data)
+        data = json.loads(self.dataset[idx])
         return data
 
 
