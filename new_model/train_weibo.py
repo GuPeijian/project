@@ -34,7 +34,7 @@ class tokendataset(Dataset):
         return self.file_raws
 
     def __getitem__(self, idx):
-        data = json.loads(self.dataset[idx])
+        data = json.loads(self.dataset[idx][:-1]) #remove /n
         return data
 
 
