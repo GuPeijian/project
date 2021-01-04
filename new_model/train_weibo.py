@@ -19,15 +19,24 @@ from torch.utils.data import Dataset, DataLoader
 
 
 class tokendataset(Dataset):
-    def __init__(self, list_file):
-        self.dataset = list_file
+    def __init__(self, data_file):
+        self.file_path = data_file
+        dataset = []
+        file_raws = 0
+        with open(self.file_path, 'r', encoding='utf-8') as f:
+            for _ in f:
+                file_raws += 1
+                dataset.append(_)
+        self.file_raws = file_raws
+        self.dataset = dataset
 
     def __len__(self):
-        return len(self.dataset)
+        return self.file_raws
 
     def __getitem__(self, idx):
         data = self.dataset[idx]
-        return (data)
+        data = json.loads(data)
+        return data
 
 
 def padding_fuse_fn(data_list):
@@ -88,11 +97,11 @@ def set_seed(args):
 def main():
     parser = argparse.ArgumentParser()
     # data and model
-    parser.add_argument("--data_path", default="/home/gpj/project/all_data/hxj_and_news/all_data.json", type=str, )
+    parser.add_argument("--data_path", default="/home/gpj/project/all_data/all/all_data.json", type=str, )
     parser.add_argument("--model_name_or_path", default='/home/gpj/bert-chinese', type=str, )
-    parser.add_argument("--output_dir", default="/home/gpj/project/all_model/hxj_and_news", type=str, )
+    parser.add_argument("--output_dir", default="/home/gpj/project/all_model/all", type=str, )
 
-    parser.add_argument("--batch_size", default=20, type=int, )
+    parser.add_argument("--batch_size", default=10, type=int, )
     parser.add_argument("--gradient_accumulation_steps", type=int, default=1, )
     parser.add_argument("--learning_rate", default=3e-5, type=float, help="学习率")
     parser.add_argument("--weight_decay", default=0.01, type=float, help="学习率衰减")
@@ -101,12 +110,12 @@ def main():
     parser.add_argument("--num_train_epochs", default=2, type=int, help="训练epochs次数", )
     parser.add_argument("--warmup_rate", default=0.1, type=int, help="学习率线性预热步数")
     parser.add_argument("--logging_steps", type=int, default=100, help="每多少步打印日志")
-    parser.add_argument("--log_dir", default="/home/gpj/project/log/hxj_and_news", type=str, )
+    parser.add_argument("--log_dir", default="/home/gpj/project/log/all", type=str, )
     parser.add_argument("--seed", type=int, default=100, help="初始化随机种子")
-    parser.add_argument("--max_steps", default=200000, type=int, help="训练的总步数", )
-    parser.add_argument("--save_steps", default=20000, type=int, help="保存的间隔steps", )
+    parser.add_argument("--max_steps", default=1000000, type=int, help="训练的总步数", )
+    parser.add_argument("--save_steps", default=40000, type=int, help="保存的间隔steps", )
     parser.add_argument('--local_rank', default=0, type=int, help='node rank for distributed training')
-    parser.add_argument('--gpus', default=2, type=int, help='number of gpus per node')
+    parser.add_argument('--gpus', default=6, type=int, help='number of gpus per node')
     parser.add_argument('--nodes', default=1, type=int, metavar='N')
     parser.add_argument("--overwrite_output_dir", default=False, action="store_true", help="是否覆盖输出文件夹")
 
@@ -114,7 +123,7 @@ def main():
 
     os.environ['MASTER_ADDR'] = '127.0.0.1'
     os.environ['MASTER_PORT'] = '6666'
-    os.environ['CUDA_VISIBLE_DEVICES'] = '0,1'
+    os.environ['CUDA_VISIBLE_DEVICES'] = '0,1,2,3,4,5'
     args.world_size = args.gpus * args.nodes
 
     if (
