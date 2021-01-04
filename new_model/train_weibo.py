@@ -164,7 +164,8 @@ def main():
     model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[args.local_rank],
                                                       output_device=args.local_rank, find_unused_parameters=True)
     t_total = args.max_steps
-    tb_writer = SummaryWriter(args.log_dir)
+    if args.local_rank == 0:
+        tb_writer = SummaryWriter(args.log_dir)
     no_decay = ['bias', 'LayerNorm.weight']
     optimizer_grouped_parameters = [
         {'params': [p for n, p in model.named_parameters() if not any(nd in n for nd in no_decay)],
