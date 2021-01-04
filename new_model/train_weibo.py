@@ -97,7 +97,7 @@ def set_seed(args):
 def main():
     parser = argparse.ArgumentParser()
     # data and model
-    parser.add_argument("--data_path", default="/home/gpj/project/all_data/all/all_data.json", type=str, )
+    parser.add_argument("--data_path", default="/home/gpj/project/all_data/all/all_data.txt", type=str, )
     parser.add_argument("--model_name_or_path", default='/home/gpj/bert-chinese', type=str, )
     parser.add_argument("--output_dir", default="/home/gpj/project/all_model/all", type=str, )
 
@@ -148,11 +148,8 @@ def main():
     # Set seed
     set_seed(args)
 
-    # load json data
-    with open(args.data_path, 'r')as f:
-        data_file = json.load(f)
 
-    train_dataset = tokendataset(data_file)
+    train_dataset = tokendataset(args.data_path)
     train_sampler = torch.utils.data.distributed.DistributedSampler(train_dataset)
     train_dataloader = DataLoader(train_dataset, num_workers=0, batch_size=args.batch_size, shuffle=False,
                                   drop_last=True, collate_fn=padding_fuse_fn, sampler=train_sampler)
