@@ -188,8 +188,9 @@ def main():
         #unique_tokens = json.load(f)
     # assert len(unique_tokens[0]) == len(tokenizer)
     # unique_tokens = torch.tensor(unique_tokens, device=device)
-
+    current_epoch=0
     for epoch in trange(int(args.num_train_epochs), desc='Epoch'):
+        current_epoch+=1
         for step, batch in enumerate(tqdm(train_dataloader, desc='Iteration')):
             input_ids, attention_mask, token_type_ids, labels = \
                 batch["input_ids"], batch["attention_mask"], batch["token_type_ids"], batch["labels"]
@@ -236,6 +237,12 @@ def main():
                 break
         if args.max_steps > 0 and global_step > t_total:
             break
+        if current_epoch<args.num_train_epochs:
+            output_dir = os.path.join(args.output_dir, 'checkpoint-epoch-{}'.format(current_epoch))
+            if not os.path.exists(output_dir):
+                os.makedirs(output_dir)
+            model_to_save = (model.module if hasattr(model, "module") else model)
+            model_to_save.save_pretrained(output_dir)
 
     tb_writer.close()
     if args.local_rank == 0:
