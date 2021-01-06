@@ -1,1 +1,1 @@
-python -m torch.distributed.launch --nproc_per_node=6 train_weibo.py
+python -m torch.distributed.launch --nproc_per_node=8 train_weibo.py
