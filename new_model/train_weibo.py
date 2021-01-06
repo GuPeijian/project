@@ -98,7 +98,7 @@ def main():
     # data and model
     parser.add_argument("--data_path", default="/home/gpj/project/all_data/all/all_data.txt", type=str, )
     parser.add_argument("--model_name_or_path", default='/home/gpj/bert-chinese', type=str, )
-    parser.add_argument("--output_dir", default="/home/gpj/project/all_model/all_2", type=str, )
+    parser.add_argument("--output_dir", default="/home/gpj/project/all_model/all_3", type=str, )
 
     parser.add_argument("--batch_size", default=8, type=int, )
     parser.add_argument("--gradient_accumulation_steps", type=int, default=1, )
@@ -109,12 +109,12 @@ def main():
     parser.add_argument("--num_train_epochs", default=2, type=int, help="训练epochs次数", )
     parser.add_argument("--warmup_rate", default=0.1, type=int, help="学习率线性预热步数")
     parser.add_argument("--logging_steps", type=int, default=100, help="每多少步打印日志")
-    parser.add_argument("--log_dir", default="/home/gpj/project/log/all_2", type=str, )
+    parser.add_argument("--log_dir", default="/home/gpj/project/log/all_3", type=str, )
     parser.add_argument("--seed", type=int, default=100, help="初始化随机种子")
     parser.add_argument("--max_steps", default=1000000, type=int, help="训练的总步数", )
     parser.add_argument("--save_steps", default=40000, type=int, help="保存的间隔steps", )
     parser.add_argument('--local_rank', default=0, type=int, help='node rank for distributed training')
-    parser.add_argument('--gpus', default=6, type=int, help='number of gpus per node')
+    parser.add_argument('--gpus', default=8, type=int, help='number of gpus per node')
     parser.add_argument('--nodes', default=1, type=int, metavar='N')
     parser.add_argument("--overwrite_output_dir", default=False, action="store_true", help="是否覆盖输出文件夹")
 
@@ -122,7 +122,7 @@ def main():
 
     os.environ['MASTER_ADDR'] = '127.0.0.1'
     os.environ['MASTER_PORT'] = '6666'
-    os.environ['CUDA_VISIBLE_DEVICES'] = '0,1,2,5,6,7'
+    os.environ['CUDA_VISIBLE_DEVICES'] = '0,1,2,3,4,5,6,7'
     args.world_size = args.gpus * args.nodes
 
     if (
