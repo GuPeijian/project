@@ -237,12 +237,13 @@ def main():
                 break
         if args.max_steps > 0 and global_step > t_total:
             break
-        if current_epoch<args.num_train_epochs:
-            output_dir = os.path.join(args.output_dir, 'checkpoint-epoch-{}'.format(current_epoch))
-            if not os.path.exists(output_dir):
-                os.makedirs(output_dir)
-            model_to_save = (model.module if hasattr(model, "module") else model)
-            model_to_save.save_pretrained(output_dir)
+        if torch.distributed.get_rank() == 0:
+            if current_epoch<args.num_train_epochs:
+                output_dir = os.path.join(args.output_dir, 'checkpoint-epoch-{}'.format(current_epoch))
+                if not os.path.exists(output_dir):
+                    os.makedirs(output_dir)
+                model_to_save = (model.module if hasattr(model, "module") else model)
+                model_to_save.save_pretrained(output_dir)
 
     tb_writer.close()
     if args.local_rank == 0:
