@@ -244,8 +244,8 @@ def main():
                     os.makedirs(output_dir)
                 model_to_save = (model.module if hasattr(model, "module") else model)
                 model_to_save.save_pretrained(output_dir)
-
-    tb_writer.close()
+    if args.local_rank == 0:
+        tb_writer.close()
     if args.local_rank == 0:
         logger.info(" global_step = %s, average loss = %s", global_step, tr_loss / global_step)
     if not os.path.exists(args.output_dir):
